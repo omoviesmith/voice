@@ -5,8 +5,10 @@ import os
 from collections import Counter
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = "EKdeunvo.1"  # change this to a secure random string
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 CORS(app, resources={r"/*": {"origins": "https://the-voice.vercel.app", "supports_credentials": True}})
-app.secret_key = "EKdeunvo.1"  # change this to a secure random string
 
 # Initialize embeddings only once
 index_name = 'thevoice'
