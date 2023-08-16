@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, make_response
 from flask_cors import cross_origin  # Import the cross_origin decorator
 from flask_cors import CORS  # Import the CORS module
 from process2 import insert_or_fetch_embeddings, ask_with_memory  # Import your main class or function
@@ -15,6 +15,16 @@ vector_store = insert_or_fetch_embeddings(index_name=index_name)  # use your act
 
 # Global list of questions asked
 global_question_list = []
+
+# Set up CORS manually with Access-Control-Allow-Credentials
+@app.after_request
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'  # Replace * with your desired origin(s)
+    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'  # Allow credentials
+    return response
+
 
 @app.route('/ask', methods=['POST'])
 @cross_origin()  # Apply CORS to this specific route
