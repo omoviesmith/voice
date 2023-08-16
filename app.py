@@ -1,11 +1,12 @@
 from flask import Flask, request, jsonify, session
 from flask_cors import cross_origin  # Import the cross_origin decorator
+from flask_cors import CORS  # Import the CORS module
 from process2 import insert_or_fetch_embeddings, ask_with_memory  # Import your main class or function
 import os
 from collections import Counter
 
 app = Flask(__name__)
-#CORS(app)  # Enable CORS for all routes with the wildcard "*"
+CORS(app)  # Enable CORS for all routes with the wildcard "*"
 app.secret_key = "EKdeunvo.1"  # change this to a secure random string
 
 # Initialize embeddings only once
