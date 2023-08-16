@@ -4,6 +4,7 @@ import os
 from collections import Counter
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS for all routes with the wildcard "*"
 app.secret_key = "EKdeunvo.1"  # change this to a secure random string
 
 # Initialize embeddings only once
