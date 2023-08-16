@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, session
+from flask_cors import cross_origin  # Import the cross_origin decorator
 from process2 import insert_or_fetch_embeddings, ask_with_memory  # Import your main class or function
 import os
 from collections import Counter
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes with the wildcard "*"
+#CORS(app)  # Enable CORS for all routes with the wildcard "*"
 app.secret_key = "EKdeunvo.1"  # change this to a secure random string
 
 # Initialize embeddings only once
@@ -15,6 +16,7 @@ vector_store = insert_or_fetch_embeddings(index_name=index_name)  # use your act
 global_question_list = []
 
 @app.route('/ask', methods=['POST'])
+@cross_origin()  # Apply CORS to this specific route
 def ask():
     # Get the data 
     data = request.get_json()
@@ -40,6 +42,7 @@ def ask():
     })
 
 @app.route('/chathistory/<user_id>', methods=['GET'])
+@cross_origin()  # Apply CORS to this specific route
 def get_chat_history(user_id):
     # Get the chat history for this user from the session
     chat_history = session.get(user_id, [])
@@ -50,6 +53,7 @@ def get_chat_history(user_id):
     })
 
 @app.route('/faq', methods=['GET'])
+@cross_origin()  # Apply CORS to this specific route
 def frequently_asked_questions():
     # Get the top 3 most common questions from the global list
     top_common_questions = Counter(global_question_list).most_common(3)
@@ -60,6 +64,7 @@ def frequently_asked_questions():
     })
 
 @app.route('/global-question-list', methods=['GET'])
+@cross_origin()  # Apply CORS to this specific route
 def get_global_question_list():
     return jsonify({
         'global_question_list': global_question_list
