@@ -1,12 +1,11 @@
 from flask import Flask, request, jsonify, session, make_response
-from flask_cors import cross_origin  # Import the cross_origin decorator
-from flask_cors import CORS  # Import the CORS module
+from flask_cors import CORS, cross_origin  # Import the cross_origin decorator
 from process2 import insert_or_fetch_embeddings, ask_with_memory  # Import your main class or function
 import os
 from collections import Counter
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes with the wildcard "*"
+CORS(app, resources={r"/*": {"origins": "https://the-voice.vercel.app", "supports_credentials": True}})
 app.secret_key = "EKdeunvo.1"  # change this to a secure random string
 
 # Initialize embeddings only once
@@ -16,18 +15,8 @@ vector_store = insert_or_fetch_embeddings(index_name=index_name)  # use your act
 # Global list of questions asked
 global_question_list = []
 
-# Set up CORS manually with Access-Control-Allow-Credentials
-@app.after_request
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = '*'  # Replace * with your desired origin(s)
-    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    response.headers['Access-Control-Allow-Credentials'] = 'true'  # Allow credentials
-    return response
-
-
 @app.route('/ask', methods=['POST'])
-@cross_origin()  # Apply CORS to this specific route
+@cross_origin(supports_credentials=True)  # Apply CORS to this specific route
 def ask():
     # Get the data 
     data = request.get_json()
@@ -53,7 +42,7 @@ def ask():
     })
 
 @app.route('/chathistory/<user_id>', methods=['GET'])
-@cross_origin()  # Apply CORS to this specific route
+@cross_origin(supports_credentials=True)  # Apply CORS to this specific route
 def get_chat_history(user_id):
     # Get the chat history for this user from the session
     chat_history = session.get(user_id, [])
