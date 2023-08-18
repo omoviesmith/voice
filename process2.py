@@ -133,7 +133,7 @@ def ask_with_memory(vector_store, question, chat_history=[]):
     custom_prompt = PromptTemplate.from_template(custom_template)
 
     llm = ChatOpenAI(temperature=1)
-    retriever = vector_store.as_retriever(search_type='similarity', search_kwargs={'k': 10})
+    retriever = vector_store.as_retriever(search_type='similarity', search_kwargs={'k':5})
 
     crc = ConversationalRetrievalChain.from_llm(llm, retriever, condense_question_prompt=custom_prompt)
     result = crc({'question': question, 'chat_history': chat_history})
